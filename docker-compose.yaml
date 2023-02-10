@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: ./server
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    depends_on:
+      - mongodb
+    ports:
+      - 8080:8080
+  mongodb:
+    image:
+      mongo:4.2
+    restart: unless-stopped
+    ports:
+      - 7017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+      - MONGO_INITDB_DATABASE=Texts
+    volumes:
+      - ./data/db:/data/db
+      - ./data/texts:/data/texts
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
